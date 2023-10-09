@@ -5,7 +5,7 @@
 Demonstrate how to use generic backup with kasten on openshift when your storage does not support snapshot 
 (ie Nas economy, Azure file, simple NFS ...). 
 
-Because we run a sidecar inside the workload we need to make sure the pods has the necessary capabilities to do
+Because we run a sidecar inside the workload we need to make sure the pods has the [necessary capabilities](https://docs.kasten.io/latest/install/generic.html#openshift-container-platform-ocp-v4-11-and-newer) to do
 backup and restore filesystem operation (using kopia). For that we create a specific scc with the minimum capabilities 
 and we create the necessary binding to the service account of the namespaces.
 

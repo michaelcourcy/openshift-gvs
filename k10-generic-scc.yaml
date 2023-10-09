@@ -1,0 +1,34 @@
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: k10-generic-backup
+priority: 20
+users: []
+groups: []
+allowHostPorts: false
+allowHostIPC: false
+allowHostPID: false
+allowHostNetwork: false
+allowPrivilegedContainer: false
+allowHostDirVolumePlugin: false
+readOnlyRootFilesystem: false
+allowPrivilegeEscalation: true
+allowedCapabilities:
+  - CHOWN
+  - DAC_OVERRIDE
+  - FOWNER
+runAsUser:
+  type: MustRunAsRange
+seLinuxContext:
+  type: MustRunAs
+fsGroup:
+  type: MustRunAs
+supplementalGroups:
+  type: RunAsAny
+volumes:
+  - configMap
+  - downwardAPI
+  - emptyDir
+  - persistentVolumeClaim
+  - projected
+  - secret

@@ -22,7 +22,7 @@ oc create ns test-sidecar
 oc project test-sidecar
 ```
 
-Give any service account the ability to consume the k10-generic-backup scc
+Give any service account in the test-sidecar namsespace the ability to consume the k10-generic-backup scc
 ```
 oc create -f k10-generic-scc.yaml
 oc adm policy add-scc-to-group k10-generic-backup system:serviceaccounts:test-sidecar -n test-sidecar

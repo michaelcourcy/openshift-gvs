@@ -12,7 +12,7 @@ allowedCapabilities:
 apiVersion: security.openshift.io/v1
 defaultAddCapabilities: null
 fsGroup:
-  type: MustRunAs
+  type: RunAsAny
 groups: []
 kind: SecurityContextConstraints
 metadata:
@@ -21,7 +21,7 @@ priority: 20
 readOnlyRootFilesystem: false
 requiredDropCapabilities: null
 runAsUser:
-  type: MustRunAsRange
+  type: RunAsAny
 seLinuxContext:
   type: MustRunAs
 seccompProfiles:

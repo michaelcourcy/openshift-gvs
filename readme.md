@@ -18,7 +18,7 @@ backup and restore filesystem operation (using kopia). For that we create a spec
 
 Open the file deployment-with-one-pvc.yaml and change 2 things
 - Line 28: the image, use an image that you can pull from your cluster for instance docker.io/alpine:latest
-- Line 51: change the names of the storage class use one storage class that exist in your cluster for instance managed-csi
+- Line 51: change the names of the storage class use one storage class that exist in your cluster for instance azurefile-csi
 
 ```
 oc create -f deployment-with-one-pvc.yaml
@@ -74,7 +74,7 @@ namespace=basic-app
 oc adm policy add-scc-to-group restricted-v2-gvs system:serviceaccounts:$namespace -n $namespace
 ```
 
-# add the capabilities to the deployment 
+# Add the capabilities to the deployment 
 
 So far we gave the authorization to the workload to take this capabilities but for the moment the 
 workload did not claim them. That's what we're going to do now by changing the security context 
@@ -130,18 +130,18 @@ NAME                         READY   STATUS    RESTARTS   AGE
 basic-app-759d466dc9-sr6cf   2/2     Running   0          3m19s
 ```
 
-and that also the kanister-sidecar has also the nessary capacity 
+control the kanister-sidecar capabilities: 
 ```
 oc get deploy basic-app -o jsonpath='{.spec.template.spec.containers[1].securityContext.capabilities}'
 {"add":["CHOWN","DAC_OVERRIDE","FOWNER"]}
 ```
 
-you can also check that kopia is executable in the kanister-sidecar container  by just running `kopia` 
+Verify kopia is executable in the kanister-sidecar container  by just running `kopia` 
 ```
 oc exec deploy/basic-app -c kanister-sidecar -- kopia
 ```
 
-If the capabilities were not there that would not be possible, in this case you'll have `operation not permitted`.
+If the capabilities were not there that would not be possible, in this case you would have a message `operation not permitted`.
 
 # Configure Kasten to allow GVS 
 
@@ -156,7 +156,7 @@ genericStorageBackup:
   token: <token>
 ```
 
-If you are testing with the Kasten team a temporary test token can be provided in the form of 
+If you are just evaluating the product, the kasten team provide a temporary test token with this form:  
 
 ```
 genericStorageBackup:
@@ -166,6 +166,12 @@ genericStorageBackup:
 
 This information must be added to your helm configuration directly in a "`values.yaml`" file or
 in the k10 custom resource manisfest if you deploy Kasten with the operator.
+
+It is also possible to use helm `--set option`
+```
+--set genericStorageBackup.token=<Generated GSB Activation Token>
+--set genericStorageBackup.overridepubkey=<Staging Public Key>
+```
 
 # create a policy 
 

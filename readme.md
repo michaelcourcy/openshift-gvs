@@ -11,8 +11,7 @@ your deployment or statefulset. Hence you'll have to use an exectable call `k10t
 still work in other environments.
 
 Because we run a sidecar inside the workload we need to make sure the pods has the [necessary capabilities](https://docs.kasten.io/latest/install/generic.html#required-capabilities-for-generic-storage-backup) to do
-backup and restore filesystem operation (using kopia). For that we create a specific scc with the minimum capabilities 
-and we create the necessary binding to the service account of the namespaces.
+backup and restore filesystem operation (using kopia). For that we create a specific `scc` (Security Context Constraint) with the minimum (but necessary) capabilities and authorize the service account of this namespace to use this `scc`.
 
 
 ## Deploy your application 
@@ -64,12 +63,12 @@ And add
 ```
 to the `allowedCapabilities` section.
 
-and submit it 
+submit it 
 ```
 oc create -f restricted-v2-gvs.yaml 
 ```
 
-And give the authorization to any service account in the namespace to use this scc 
+and give the authorization to any service account in the namespace to use this scc 
 ```
 namespace=basic-app
 oc adm policy add-scc-to-group restricted-v2-gvs system:serviceaccounts:$namespace -n $namespace

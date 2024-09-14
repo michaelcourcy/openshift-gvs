@@ -4,20 +4,6 @@ metadata:
   name: basic-app  
 spec: {}
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: system:openshift:scc:k10-generic-backup
-  namespace: basic-app  
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: system:openshift:scc:k10-generic-backup
-subjects:
-- kind: ServiceAccount
-  name: default
-  namespace: basic-app
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -45,25 +31,10 @@ spec:
               memory: 256Mi
               cpu: 100m
         command: ["tail"]
-        args: ["-f", "/dev/null"]
-        securityContext: 
-          allowPrivilegeEscalation: false
-          capabilities: 
-            drop: 
-            - "ALL"
-            add: 
-            - "CHOWN"
-            - "DAC_OVERRIDE"
-            - "FOWNER"
-          runAsNonRoot: true 
-          runAsUser: 1001 
-          seccompProfile: 
-            type: "RuntimeDefault" 
+        args: ["-f", "/dev/null"]         
         volumeMounts:
         - name: data
-          mountPath: /data
-      securityContext:
-        fsGroup: 1001 
+          mountPath: /data        
       volumes:
       - name: data
         persistentVolumeClaim:
@@ -73,7 +44,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: pvc-kasten
-  namespace: badic-app
+  namespace: basic-app
 spec:
   # storageClassName: ocs-storagecluster-ceph-rbd
   accessModes:
